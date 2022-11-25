@@ -18,8 +18,20 @@ class Report extends Model
     // timestamps
     public $timestamps = true;
 
-    function users() {
+    
+    // users relationship
+    public function users() {
         return $this->belongsTo(User::class);
+    }
+
+    // report states relationship
+    public function reportState() {
+        return $this->hasOne(ReportState::class);
+    }
+
+    // report images relationship
+    public function reportImages() {
+        return $this->hasMany(ReportImage::class);
     }
     
 }

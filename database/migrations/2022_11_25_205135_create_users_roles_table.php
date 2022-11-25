@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -14,17 +15,19 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users_roles', function (Blueprint $table) {
-            $table->id();
-            $table->string('user_id');
+            $table->integer('user_id')->unsigned();
+            $table->integer('role_id')->unsigned();
 
+            // referencing relationships
             $table->foreign('user_id')
                 ->references('id')
-                ->on('users');
+                ->on('users')
+                ->onDelete('cascade');
 
-            // $table->string('role_id');
-            // $table->foreign('role_id')
-            //     ->references('id')
-            //     ->on('roles');
+            $table->foreign('role_id')
+                ->references('id')
+                ->on('roles')
+                ->onDelete('cascade');
 
             $table->timestamps();
         });

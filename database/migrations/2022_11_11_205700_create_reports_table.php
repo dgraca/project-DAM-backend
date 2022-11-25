@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('reports', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('description');
             $table->string('latitude');
             $table->string('longitude');
