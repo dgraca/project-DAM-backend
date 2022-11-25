@@ -1,5 +1,7 @@
 <?php
 
+use App\http\Controllers\AuthController;
+use App\http\Controllers\ReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+// public routes
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::get('/reports', [ReportController::class, 'index']);
+// Route::post('/reports', [ReportController::class, 'store']);
+
+
+
+
+/**
+ * Middleware (sanctum)
+ * 
+ * protected routes (inside group)
+ */
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('/reports', [ReportController::class, 'store']);
 });

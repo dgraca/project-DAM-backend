@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Report;
 use Illuminate\Http\Request;
 
-class ReportsControllers extends Controller
+class ReportController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,17 +14,7 @@ class ReportsControllers extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Report::all();
     }
 
     /**
@@ -34,7 +25,8 @@ class ReportsControllers extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // creates a report with no validation
+        return Report::create($request->all());
     }
 
     /**
@@ -45,18 +37,7 @@ class ReportsControllers extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return Report::find($id);
     }
 
     /**
@@ -68,7 +49,7 @@ class ReportsControllers extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return Report::find($id)->update($request->all());
     }
 
     /**
@@ -79,6 +60,6 @@ class ReportsControllers extends Controller
      */
     public function destroy($id)
     {
-        //
+        return Report::find($id)->delete();
     }
 }

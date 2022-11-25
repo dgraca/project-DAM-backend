@@ -13,10 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('report_states', function (Blueprint $table) {
-            $table->id();
-            $table->string('state');
-            $table->timestamps();
+        Schema::table('reports', function (Blueprint $table) {
+            $table->string('title');
         });
     }
 
@@ -27,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('report_states');
+        Schema::table('reports', function (Blueprint $table) {
+            $table->dropColumn('title');
+        });
     }
 };
