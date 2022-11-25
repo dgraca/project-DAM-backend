@@ -18,6 +18,16 @@ class Report extends Model
     // timestamps
     public $timestamps = true;
 
+
+    protected $fillable = [
+        'title',
+        'description',
+        'user_id',
+        'state',
+        'latitude',
+        'longitude',
+    ];
+
     
     // users relationship
     public function users() {
