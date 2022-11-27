@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
+use App\Models\ReportImage;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -15,13 +16,9 @@ class ReportController extends Controller
     public function index()
     {
         // get all reports with pagination (10 each time)
-        // TODO: missing images relationship. something is giving errors
-        //! please solve errors ASP
-        $reports = Report::with('state')
-            ->with('user', 'state')
+        return Report::with('state')
+            ->with('user', 'state', 'images')
             ->paginate(10);
-
-        return $reports;
     }
 
     /**
@@ -32,8 +29,40 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
+        // validate request
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        // store image in public_path('report_images')
         // creates a report with no validation
-        return Report::create($request->all());
+        $image = $request->image;
+        if ($image != null) {
+            foreach ($image as $key => $value) {
+                $data = hash('sha256', $value->getClientOriginalName() . '_' . time() . $key);
+                $imageName = $data . '.' . $value->extension();
+                $value->move(public_path('report_images'), $imageName);
+                $image[$key] = $imageName;
+            }
+        }
+
+        // create report
+        $report = Report::create($request->all());
+
+        // create report image
+        foreach ($image as $key => $value) {
+            // creates report image
+            ReportImage::create([
+                'image' => $image[$key],
+                'report_id' => $report->id,
+            ]);
+        }
+
+        return $report;
     }
 
     /**
@@ -43,8 +72,8 @@ class ReportController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        return Report::find($id);
+    { 
+        return Report::with('user', 'state', 'images')->find($id);
     }
 
     /**
@@ -56,6 +85,10 @@ class ReportController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // TODO: update data and deal with images
+        //! delete images that are not in the request?
+        //! fuck, dealing with images will be problematic
+        //! maybe an entry API to delete images?
         return Report::find($id)->update($request->all());
     }
 
@@ -67,6 +100,8 @@ class ReportController extends Controller
      */
     public function destroy($id)
     {
-        return Report::find($id)->delete();
+        $report = Report::with('user', 'state', 'images')->find($id);
+        $report->images()->delete();
+        return $report->delete();
     }
 }

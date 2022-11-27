@@ -18,6 +18,11 @@ class ReportImage extends Model
     // timestamps
     public $timestamps = true;
 
+    protected $fillable = [
+        'image',
+        'report_id',
+    ];
+
     
     // report relationship
     public function report() {

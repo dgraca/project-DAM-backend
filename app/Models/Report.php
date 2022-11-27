@@ -23,7 +23,7 @@ class Report extends Model
         'title',
         'description',
         'user_id',
-        'state',
+        'state_id',
         'latitude',
         'longitude',
     ];
