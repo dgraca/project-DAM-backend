@@ -14,7 +14,14 @@ class ReportController extends Controller
      */
     public function index()
     {
-        return Report::all();
+        // get all reports with pagination (10 each time)
+        // TODO: missing images relationship. something is giving errors
+        //! please solve errors ASP
+        $reports = Report::with('state')
+            ->with('user', 'state')
+            ->paginate(10);
+
+        return $reports;
     }
 
     /**
