@@ -20,7 +20,7 @@ class ReportImage extends Model
 
     
     // report relationship
-    public function reports() {
+    public function report() {
         return $this->belongsTo(Report::class);
     }
 }

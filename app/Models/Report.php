@@ -29,18 +29,18 @@ class Report extends Model
     ];
 
     
-    // users relationship
-    public function users() {
+    // user relationship
+    public function user() {
         return $this->belongsTo(User::class);
     }
 
     // report states relationship
-    public function reportState() {
-        return $this->hasOne(ReportState::class);
+    public function state() {
+        return $this->belongsTo(ReportState::class);
     }
 
     // report images relationship
-    public function reportImages() {
+    public function images() {
         return $this->hasMany(ReportImage::class);
     }
     

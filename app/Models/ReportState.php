@@ -20,7 +20,7 @@ class ReportState extends Model
 
     
     // reports relationship
-    public function report() {
-        return $this->belongsTo(Report::class);
+    public function reports() {
+        return $this->hasMany(Report::class);
     }
 }
