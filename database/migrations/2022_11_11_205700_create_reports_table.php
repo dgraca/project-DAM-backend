@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('latitude');
             $table->string('longitude');
             $table->integer('user_id');
-            $table->integer('state');
+            $table->integer('state_id');
             $table->timestamps();
         });
     }
