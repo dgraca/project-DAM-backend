@@ -22,6 +22,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/reports', [ReportController::class, 'index']);
+Route::get('/reports/{id}', [ReportController::class, 'show']);
 // Route::post('/reports', [ReportController::class, 'store']);
 
 
@@ -40,4 +41,5 @@ Route::get('/reports', [ReportController::class, 'index']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/reports', [ReportController::class, 'store']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::delete('/reports/{id}', [ReportController::class, 'destroy']);
 });
