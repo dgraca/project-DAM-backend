@@ -13,12 +13,12 @@ class Report extends Model
     protected $table = 'reports';
 
     // primary key
-    public $primaryKey = 'id';
+    protected $primaryKey = 'id';
 
     // timestamps
     public $timestamps = true;
 
-
+    // allows to edit those fields
     protected $fillable = [
         'title',
         'description',

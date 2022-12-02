@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Report;
 use App\Models\ReportImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -15,9 +16,11 @@ class ReportController extends Controller
      */
     public function index()
     {
+        $reports = Report::all();
         // get all reports with pagination (10 each time)
         return Report::with('state')
             ->with('user', 'state', 'images')
+            ->where('user_id', Auth::id())
             ->paginate(10);
     }
 
@@ -35,7 +38,7 @@ class ReportController extends Controller
             'description' => 'required',
             'latitude' => 'required',
             'longitude' => 'required',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg,bmp|max:2048'
         ]);
 
         // store image in public_path('report_images')
@@ -51,7 +54,14 @@ class ReportController extends Controller
         }
 
         // create report
-        $report = Report::create($request->all());
+        $report = Report::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'user_id' => Auth::user()->id,
+            'state_id' => 1,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ]);
 
         // create report image
         foreach ($image as $key => $value) {
@@ -73,7 +83,7 @@ class ReportController extends Controller
      */
     public function show($id)
     { 
-        return Report::with('user', 'state', 'images')->find($id);
+        return Report::with('user', 'state', 'images')->find($id)->where('user_id', Auth::id());
     }
 
     /**
@@ -89,7 +99,7 @@ class ReportController extends Controller
         //! delete images that are not in the request?
         //! fuck, dealing with images will be problematic
         //! maybe an entry API to delete images?
-        return Report::find($id)->update($request->all());
+        return Report::find($id)->where('user_id', Auth::id())->update($request->all());
     }
 
     /**
@@ -100,7 +110,7 @@ class ReportController extends Controller
      */
     public function destroy($id)
     {
-        $report = Report::with('user', 'state', 'images')->find($id);
+        $report = Report::with('user', 'state', 'images')->find($id)->where('user_id', Auth::id());
         $report->images()->delete();
         return $report->delete();
     }
